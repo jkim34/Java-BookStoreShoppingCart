@@ -47,6 +47,9 @@ public class CartController extends HttpServlet {
 			case "/addcart":
 				addToCart(request, response);
 				break;
+			case "/delete":
+				deleteFromCart(request, response);
+				break;
 			default:
 				break;
 			}
@@ -56,6 +59,24 @@ public class CartController extends HttpServlet {
 		}
 
 		response.sendRedirect("../ShoppingCart.jsp");
+	}
+	
+	private void deleteFromCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		try {
+			int param = Integer.parseInt(request.getParameter("index"));
+			
+			ShoppingCart shoppingCart = null;
+			Object objCartBean = session.getAttribute("cart");
+			if (objCartBean != null) {
+				shoppingCart = (ShoppingCart) objCartBean;
+				
+				shoppingCart.deleteCartItem(param);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 
 	protected void addToCart(HttpServletRequest request, HttpServletResponse response)
@@ -87,6 +108,7 @@ public class CartController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("Entering doPost");
 		doGet(request, response);
 	}
 }
